@@ -14,6 +14,7 @@
     flex-direction: column;
     background-color: grey;
     width: 300px;
+    height: 300px;
 }
 
 .display {
@@ -28,26 +29,38 @@
 }
 
 .button {
-    width: 50px;
+    width: auto;
     height: 50px;
 }
 
-.button-container :nth-child(1) {order: 14}
-.button-container :nth-child(2) {order: 9}
-.button-container :nth-child(3) {order: 10}
-.button-container :nth-child(4) {order: 11}
-.button-container :nth-child(5) {order: 5}
-.button-container :nth-child(6) {order: 6}
-.button-container :nth-child(7) {order: 7}
-.button-container :nth-child(8) {order: 1}
-.button-container :nth-child(9) {order: 2}
-.button-container :nth-child(10) {order: 3}
-.button-container :nth-child(11) {order: 16}
-.button-container :nth-child(12) {order: 12}
-.button-container :nth-child(13) {order: 8}
-.button-container :nth-child(14) {order: 4}
-.button-container :nth-child(15) {order: 15}
-.button-container :nth-child(16) {order: 13}
+.clear {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.backspace {
+    grid-column-start: 3;
+    grid-column-end: 5;
+}
+
+.button-container :nth-child(1) {order: 16}
+.button-container :nth-child(2) {order: 11}
+.button-container :nth-child(3) {order: 12}
+.button-container :nth-child(4) {order: 13}
+.button-container :nth-child(5) {order: 7}
+.button-container :nth-child(6) {order: 8}
+.button-container :nth-child(7) {order: 9}
+.button-container :nth-child(8) {order: 3}
+.button-container :nth-child(9) {order: 4}
+.button-container :nth-child(10) {order: 5}
+.button-container :nth-child(11) {order: 15}
+.button-container :nth-child(12) {order: 18}
+.button-container :nth-child(13) {order: 14}
+.button-container :nth-child(14) {order: 10}
+.button-container :nth-child(15) {order: 6}
+.button-container :nth-child(16) {order: 17}
+.button-container :nth-child(17) {order: 1}
+.button-container :nth-child(18) {order: 2}
 
 .display {
     background-color: lightgrey;

@@ -7,6 +7,7 @@ const bottomDisplay = document.querySelector(".bottom-display")
 const clear = document.querySelector(".clear")
 const equals = document.querySelector(".equals")
 const decimal = document.querySelector(".decimal")
+const backspace = document.querySelector(".backspace")
 
 let a;
 let b;
@@ -55,28 +56,18 @@ function operate(a, b, operatorSign) {
 //marked = to remove current bottomDisplay numbers
 //primed = new answer 
 
-function buttonAOne(e) {
-    a = e.target.value;
-    bottomDisplay.textContent = a;
-    a = parseFloat(bottomDisplay.textContent);
-    bottomDisplay.removeAttribute("data-marked")
-    bottomDisplay.setAttribute("data-primed", "true")
-    bottomDisplay.removeAttribute("data-answer")
-}
-
-function buttonATwo(e) {
+function buttonA(e) {
     a = e.target.value;
     bottomDisplay.textContent += a;
     a = parseFloat(bottomDisplay.textContent);
 }
 
-
 function buttonBOne(e) {
     b = e.target.value;
     bottomDisplay.textContent = b;
     b = parseFloat(bottomDisplay.textContent);
-    bottomDisplay.removeAttribute("data-marked")
     bottomDisplay.setAttribute("data-primed", "true")
+    bottomDisplay.removeAttribute("data-marked")
 }
 
 function buttonBTwo(e) {
@@ -93,31 +84,60 @@ numbers.forEach((number) => {
             return false;
         } else if (e.target.dataset.selected && bottomDisplay.dataset.marked && bottomDisplay.textContent) {
             if (bottomDisplay.textContent == "0") {
-                bottomDisplay.textContent = "";
-                buttonBOne(e)
+                if (e.target.value == ".") {
+                    bottomDisplay.textContent = "0";
+                    buttonBOne(e);
+                } else {
+                    bottomDisplay.textContent = "";
+                    buttonBOne(e);
+                }
+            } else if (e.target.value == "." && bottomDisplay.textContent.includes(".")) {
+                return false
             } else {
-                buttonBOne(e)
+                if (e.target.value == "." && (bottomDisplay.textContent == answer || bottomDisplay.textContent == "")) {
+                    bottomDisplay.textContent = "0";
+                    buttonBTwo(e);
+                } else {
+                    buttonBOne(e);
+                }
             }
         } else if (e.target.dataset.selected) {
             if (bottomDisplay.textContent == "0") {
-                bottomDisplay.textContent = "";
-                buttonBTwo(e)
+                if (e.target.value == ".") {
+                    bottomDisplay.textContent = "0"
+                    buttonBTwo(e);
+                } else {
+                    bottomDisplay.textContent = "";
+                    buttonBTwo(e);
+                }
+            } else if (e.target.value == "." && bottomDisplay.textContent.includes(".")) {
+                return false
             } else {
-                buttonBTwo(e)
-            }
-        } else if(bottomDisplay.textContent && bottomDisplay.dataset.marked) {
-            if (bottomDisplay.textContent == "0") {
-                bottomDisplay.textContent = "";
-                buttonAOne(e)
-            } else {
-                buttonAOne(e)
+                if (e.target.value == "." && (bottomDisplay.textContent == answer || bottomDisplay.textContent == "")) {
+                    bottomDisplay.textContent = "0";
+                    buttonBTwo(e);
+                } else {
+                    buttonBTwo(e)
+                }
             }
         } else {
             if (bottomDisplay.textContent == "0") {
-                bottomDisplay.textContent = "";
-                buttonATwo(e)
+                if (e.target.value == ".") {
+                    bottomDisplay.textContent = "0"
+                    buttonA(e);
+                } else {
+                    bottomDisplay.textContent = "";
+                    buttonA(e);
+                }
+            } else if (e.target.value == "." && bottomDisplay.textContent.includes(".")) {
+                return false
             } else {
-                buttonATwo(e)
+                if (e.target.value == "." && bottomDisplay.textContent == "") {
+                    bottomDisplay.textContent = "0"
+                    buttonA(e);
+                } else {
+                    buttonA(e);
+                }
             }
         }
     })
@@ -147,6 +167,28 @@ operators.forEach((operator) => {
                 bottomDisplay.removeAttribute("data-answer")
                 a = answer;
             }
+        } else if (topDisplay.textContent == "" && bottomDisplay.textContent == "") {
+            operatorSign = e.target.value;
+            for (let i = 0; i < numbers.length; i++) {
+                numbers[i].setAttribute("data-selected", "true")
+            }
+            bottomDisplay.setAttribute("data-marked", "true")
+            bottomDisplay.removeAttribute("data-answer")
+            topDisplay.textContent = "0" + " " + e.target.innerHTML;
+            bottomDisplay.textContent = "";
+            a = "";
+            topValue = `0 ${e.target.innerHTML}`
+        } else if (bottomDisplay.dataset.marked && ((topDisplay.textContent == "0 +") || (topDisplay.textContent == "0 −") || (topDisplay.textContent == "0 ×") || (topDisplay.textContent == "0 ÷"))) {
+            operatorSign = e.target.value;
+            for (let i = 0; i < numbers.length; i++) {
+                numbers[i].setAttribute("data-selected", "true")
+            }
+            bottomDisplay.setAttribute("data-marked", "true")
+            bottomDisplay.removeAttribute("data-answer")
+            topDisplay.textContent = "0" + " " + e.target.innerHTML;
+            bottomDisplay.textContent = "";
+            a = "";
+            topValue = `0 ${e.target.innerHTML}`
         } else {
             operatorSign = e.target.value;
             for (let i = 0; i < numbers.length; i++) {
@@ -179,10 +221,8 @@ clear.addEventListener("click", () => {
 
 equals.addEventListener("click", () => {
     if (bottomDisplay.dataset.answer) {
-        topDisplay.textContent = topValue;
         bottomDisplay.removeAttribute("data-primed");
     } else if (!bottomDisplay.textContent) {
-        topDisplay.textContent = topValue;
         bottomDisplay.removeAttribute("data-primed");
     } else if (bottomDisplay.dataset.primed && bottomDisplay.dataset.marked) {
         return false;
@@ -196,6 +236,28 @@ equals.addEventListener("click", () => {
             a = answer;
             bottomDisplay.removeAttribute("data-primed");
             bottomDisplay.setAttribute("data-answer", "true")
+        }
+    }
+})
+
+backspace.addEventListener("click", () => {
+    if (bottomDisplay.dataset.primed || bottomDisplay.dataset.marked) {
+        if (bottomDisplay.textContent.length == 1) {
+            bottomDisplay.textContent = 0;
+            b = parseFloat(bottomDisplay.textContent)
+        } else {
+            bottomDisplay.textContent = bottomDisplay.textContent.slice(0, -1)
+            b = parseFloat(bottomDisplay.textContent)
+        }
+    } else if (bottomDisplay.dataset.answer) {
+        return false;
+    } else {
+        if (bottomDisplay.textContent.length == 1) {
+            bottomDisplay.textContent = 0;
+            a = parseFloat(bottomDisplay.textContent)
+        } else {
+            bottomDisplay.textContent = bottomDisplay.textContent.slice(0, -1)
+            a = parseFloat(bottomDisplay.textContent)
         }
     }
 })
